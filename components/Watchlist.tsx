@@ -1,16 +1,17 @@
 
 import React from 'react';
-import type { Item, LatestPrice } from '../types';
-import { Card } from './ui/Card';
+import type { Item, LatestPrice, TimeseriesData } from '../types';
 import { StarIcon } from './icons/Icons';
+import { WatchlistGrid } from './WatchlistGrid';
 
 interface WatchlistProps {
   items: Item[];
   latestPrices: Record<string, LatestPrice>;
   onSelectItem: (item: Item) => void;
+  timeseries: Record<string, TimeseriesData[]>;
 }
 
-export const Watchlist: React.FC<WatchlistProps> = ({ items, onSelectItem, latestPrices }) => {
+export const Watchlist: React.FC<WatchlistProps> = ({ items, onSelectItem, latestPrices, timeseries }) => {
   if (items.length === 0) {
     return (
       <div className="text-center py-20 flex flex-col items-center">
@@ -24,22 +25,12 @@ export const Watchlist: React.FC<WatchlistProps> = ({ items, onSelectItem, lates
   return (
     <div>
       <h2 className="text-3xl font-bold text-white mb-6">Your Watchlist</h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {items.map(item => (
-          <Card key={item.id} onClick={() => onSelectItem(item)} isHoverable={true}>
-            <div className="flex items-center gap-4">
-              <img src={item.icon} alt={item.name} className="w-10 h-10 object-contain" />
-              <div className="flex-1">
-                <p className="font-bold text-white">{item.name}</p>
-                <p className="text-sm text-gray-400">
-                  Price: {latestPrices[item.id]?.high?.toLocaleString() || 'N/A'} gp
-                </p>
-              </div>
-              <StarIcon className="w-5 h-5 text-yellow-400" />
-            </div>
-          </Card>
-        ))}
-      </div>
+      <WatchlistGrid 
+        items={items} 
+        latestPrices={latestPrices} 
+        onSelectItem={onSelectItem} 
+        timeseries={timeseries}
+      />
     </div>
   );
 };
